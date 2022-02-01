@@ -5,10 +5,10 @@ export default {
         secondary: '#ff872c',
         secondary_light: 'rgba(255, 135, 44, 0.3)',
         
-        success: '#12a454',
+        success: 'rgb(18, 164, 84)',
         success_light: 'rgba(18, 164, 84, 0.5)',
 
-        attention: '#e83f5b',
+        attention: 'rgb(232, 63, 91)',
         attention_light: 'rgba(232, 63, 91, 0.5)',
 
         shape: '#fff',

@@ -1,9 +1,12 @@
 import styled from 'styled-components/native'
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize'
 import { Feather } from '@expo/vector-icons'
-import { getStatusBarHeight } from 'react-native-iphone-x-helper'
-import Constants  from 'expo-constants';
-
+import { getBottomSpace } from 'react-native-iphone-x-helper'
+import Constants from 'expo-constants';
+import { DataListProps } from '.'
+import { FlatList, FlatListProps } from 'react-native';
+import { BorderlessButton } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const Container = styled.View`
         background-color: ${({ theme }) => theme.colors.background};
@@ -65,16 +68,20 @@ export const UserName = styled.Text`
 `;
 
 
+export const LogoutButton = styled(BorderlessButton)`
+`
+
+
+
 export const Icon = styled(Feather)`
         color: ${({ theme }) => theme.colors.secondary}; 
         font-size: ${RFValue(24)}px;
 `
 
-
-export const HighlightCards = styled.ScrollView.attrs({
+export const HighlightCards = styled(ScrollView).attrs({
         horizontal: true,
         showsHorizontalScrollIndicator: false,
-        contentContainerStyle: { paddingLeft: 24},
+        contentContainerStyle: { paddingLeft: 24 },
 })`
         width: 100%;
         position: absolute;
@@ -96,6 +103,17 @@ export const Title = styled.Text`
 
 `
 
-export const TransactionList = styled.FlatList`
+export const TransactionList = styled(FlatList as new (props: FlatListProps<DataListProps>) => FlatList<DataListProps>).attrs({
+        showsVerticalScrollIndicator: false,
+        contentContainerStyle: {
+                paddingBottom: getBottomSpace()
+        }
+})`
     
+`
+
+export const LoadContainer = styled.View`
+        flex: 1;
+        justify-content: center;
+        align-items: center;
 `
