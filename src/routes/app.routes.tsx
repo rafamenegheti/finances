@@ -9,6 +9,7 @@ import { Dashboard } from '../screens/Dashboard'
 import { Register } from '../screens/Register'
 import { useTheme } from "styled-components";
 import { RFValue } from "react-native-responsive-fontsize";
+import { Resume } from "../screens/Resume";
 
 export function AppRoutes() {
     const theme = useTheme()
@@ -53,7 +54,7 @@ export function AppRoutes() {
 
             <Screen
                 name="Resumo"
-                component={Dashboard}
+                component={Resume}
                 options={{
                     tabBarIcon: (({ size, color }) =>
                         <MaterialIcons

@@ -138,22 +138,15 @@ export function Dashboard() {
 
             setIsLoading(false)
 
-
         } catch (err) {
 
             console.log(`src/screens/Dashboard/index.tsx:loadTransaction ${err}`)
         }
     }
 
-    useEffect(() => {
-        loadTransactions()
-    }, [])
-
     useFocusEffect(useCallback(() => {
         loadTransactions();
     }, []));
-
-
 
     return (
         <Container>
