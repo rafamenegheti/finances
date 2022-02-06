@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import { View } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 
+import { useAuth } from '../../hooks/auth';
 import { HighlightCard } from '../../components/HighlightCard'
 import { TransactionCardProps, TransactionCard } from '../../components/TransactionCard'
 import {
@@ -24,6 +25,7 @@ import {
     LogoutButton,
     LoadContainer
 } from './styles'
+
 
 export interface DataListProps extends TransactionCardProps {
     id: string
@@ -46,11 +48,13 @@ export function Dashboard() {
     const [transactions, setTransactions] = useState<DataListProps[]>([])
     const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
 
+    const { signOut, user } = useAuth()
 
-    function getLastTransactionDate(type: 'up' | 'down') {
+
+    function getLastTransactionDate(transactionsData: DataListProps[], type: 'up' | 'down') {
         const lastTransactions = new Date(
             Math.max.apply(Math,
-                transactions.filter(item => item.type === type)
+                transactionsData.filter(item => item.type === type)
                     .map(item => new Date(item.date).getTime())
             )
         );
@@ -64,18 +68,23 @@ export function Dashboard() {
 
     async function loadTransactions() {
 
-        const dataKey = '@gofinances:transactions';
+        const dataKey = `@gofinances:transactions_user:${user.id}`;
 
         let entriesTotal = 0;
         let expensesTotal = 0;
+
+
 
         try {
             const response = await AsyncStorage.getItem(dataKey);
 
             const transactions: DataListProps[] = response ? JSON.parse(response) : [];
 
+            const lastTransactionEntries = getLastTransactionDate(transactions, 'up');
+            const lastTransactionsExpenses = getLastTransactionDate(transactions, 'down');
 
             const transactionsFormated: DataListProps[] = transactions.map((item: DataListProps) => {
+                console.log(item.date)
 
                 if (item.type === 'up') {
                     entriesTotal += Number(item.amount)
@@ -96,6 +105,8 @@ export function Dashboard() {
                     year: '2-digit'
                 }).format(new Date(item.date))
 
+                
+
                 return {
                     id: item.id,
                     name: item.name,
@@ -108,8 +119,7 @@ export function Dashboard() {
 
             setTransactions(transactionsFormated);
 
-            const lastTransactionEntries = getLastTransactionDate('up');
-            const lastTransactionsExpenses = getLastTransactionDate('down');
+
             const totalInterval = `dia primeiro até ${lastTransactionsExpenses}`;
 
             setHighlightData({
@@ -164,15 +174,15 @@ export function Dashboard() {
                             <UserWrapper>
                                 <UserInfo>
                                     <Photo
-                                        source={{ uri: 'https://avatars.githubusercontent.com/u/88295512?v=4' }}
+                                        source={{ uri: user.photo }}
                                     />
                                     <User>
                                         <UserGreeting>Olá,</UserGreeting>
-                                        <UserName>Rafael</UserName>
+                                        <UserName>{user.name}</UserName>
                                     </User>
                                 </UserInfo>
                                 <LogoutButton
-                                    onPress={() => { }}
+                                    onPress={signOut}
                                 >
                                     <View accessible>
                                         <Icon name="power" />

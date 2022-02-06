@@ -27,6 +27,7 @@ import {
     Fields,
     TransactionTypes
 } from './styles'
+import { useAuth } from '../../hooks/auth';
 
 type TransactionTypes = "up" | "down";
 
@@ -59,7 +60,7 @@ export function Register() {
     })
 
     const { navigate } = useNavigation<NavigationProps>();
-
+    const { user } = useAuth();
     function handleTransactionTypeButtonSelect(type: TransactionTypes) {
         setTransactionType(type)
     }
@@ -92,7 +93,7 @@ export function Register() {
         }
 
         try {
-            const dataKey = '@gofinances:transactions';
+            const dataKey = `@gofinances:transactions_user:${user.id}`;
             const data = await AsyncStorage.getItem(dataKey)
             const currentData = data ? JSON.parse(data) : []
 
